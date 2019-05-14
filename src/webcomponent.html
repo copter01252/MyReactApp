@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    .followme {
+        width: 100%;
+        padding: 0px 20px 10px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+    }
+
+    .followme>a {
+        color: blue;
+        display: block;
+        text-decoration: none;
+    }
+</style>
+
+<body>
+
+    <template id="follow-me-template">
+        <style>
+            .followme {
+                width: 100%;
+                padding: 0px 20px 10px;
+                border: 1px solid #eee;
+                border-radius: 4px;
+            }
+
+            ::content a {
+                display: block;
+                text-decoration: none;
+            }
+        </style>
+        <div class="followme">
+            <h3>Follow me</h3>
+            <content></content>
+        </div>
+    </template>
+
+    <follow-me>
+        <a href="https://www.facebook.com/siamhtml">facebook</a>
+        <a href="https://twitter.com/SuranartN">twitter</a>
+    </follow-me>
+
+    <script>
+        // สร้าง prototype สำหรับ follow-me element โดย extend มาจาก element แบบปกติ
+        var followMeProto = Object.create(HTMLElement.prototype);
+
+        // เมื่อสร้าง prototype เสร็จแล้วให้ทำอะไร ?
+        followMeProto.createdCallback = function () {
+            // สร้าง Shadow Root บน element นี้ แล้วยัด template ลงไป
+            var root = this.createShadowRoot();
+            var template = document.getElementById("follow-me-template");
+            root.appendChild(document.importNode(template.content, true));
+        };
+
+        // แนะนำให้ browser รู้จัก element ใหม่ที่ชื่อ follow-me
+        document.registerElement('follow-me', {
+            // โดยมี prototype เป็น followMeProto ที่เราเตรียมไว้แล้ว
+            prototype: followMeProto
+        });
+    </script>
+</body>
+
+</html>
